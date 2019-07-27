@@ -8,10 +8,11 @@ export const NotesContext = React.createContext();
 const NotesProvider = props => {
   const [notes, setNotes] = useState([]);
   useEffect(() => {
-    firestore.collection("notes").onSnapshot(snapshot => {
+    const unsubscribe = firestore.collection("notes").onSnapshot(snapshot => {
       const notes = snapshot.docs.map(doc => collectIdAndDoc(doc));
       setNotes(notes);
     });
+    return () => unsubscribe();
   });
   return (
     <NotesContext.Provider value={notes}>
