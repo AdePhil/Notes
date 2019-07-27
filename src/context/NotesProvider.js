@@ -7,6 +7,7 @@ export const NotesContext = React.createContext();
 
 const NotesProvider = props => {
   const [notes, setNotes] = useState([]);
+  const [selectedNoteIndex, setSelectedNoteIndex] = useState(0);
   useEffect(() => {
     const unsubscribe = firestore.collection("notes").onSnapshot(snapshot => {
       const notes = snapshot.docs.map(doc => collectIdAndDoc(doc));
@@ -15,7 +16,9 @@ const NotesProvider = props => {
     return () => unsubscribe();
   });
   return (
-    <NotesContext.Provider value={notes}>
+    <NotesContext.Provider
+      value={{ notes, selectedNoteIndex, note: notes[selectedNoteIndex] }}
+    >
       {props.children}
     </NotesContext.Provider>
   );

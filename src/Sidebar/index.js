@@ -9,8 +9,15 @@ const Sidebar = props => {
       <div className="sidebar">
         <h2>My Notes</h2>
         <NotesContext.Consumer>
-          {notes =>
-            notes.map(note => <SidebarItem note={note} key={note.id} />)
+          {({ notes, selectedNoteIndex }) =>
+            notes.map((note, i) => (
+              <SidebarItem
+                note={note}
+                key={note.id}
+                index={i}
+                selectedNoteIndex={selectedNoteIndex}
+              />
+            ))
           }
         </NotesContext.Consumer>
       </div>
