@@ -1,15 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./styles.css";
+import { strip } from "../utils/utils";
 
 const SidebarItem = ({ note }) => {
   return (
     <div className="sidebar-item">
-      <div class="flex flex-h-bet">
+      <div className="flex flex-h-bet">
         <h2>{note.title}</h2>
         <img src="/img/delete.svg" alt="Delete note" />
       </div>
-      <p>{note.body}</p>
+      <p>{strip(note.body)}</p>
     </div>
   );
 };
