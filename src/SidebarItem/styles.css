@@ -1,0 +1,27 @@
+.sidebar-item {
+  background-color: #ddd;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.sidebar-item:hover {
+  cursor: pointer;
+}
+
+.sidebar-item h2 {
+  margin-bottom: 5px;
+  margin-top: 0;
+}
+
+.sidebar-item p {
+  font-size: 12px;
+  margin: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-h-bet {
+  justify-content: space-between;
+}
