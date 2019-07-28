@@ -1,8 +1,5 @@
 .editor-container {
-  display: inline-block;
-  vertical-align: top;
   height: 100%;
-  width: calc(100% - 250px);
   overflow: auto;
 }
 

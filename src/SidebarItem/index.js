@@ -1,22 +1,28 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./styles.css";
 import { strip } from "../utils/utils";
 
-const SidebarItem = ({ note, index, selectedNoteIndex }) => {
+const SidebarItem = ({
+  note,
+  index,
+  selectedNoteIndex,
+  setSelectedNoteIndex,
+  deleteNote
+}) => {
   return (
     <div
       className={`sidebar-item ${index === selectedNoteIndex ? "active" : ""}`}
+      onClick={() => setSelectedNoteIndex(index)}
     >
       <div className="flex flex-h-bet">
         <h2>{note.title}</h2>
-        <img src="/img/delete.svg" alt="Delete note" />
+        <button onClick={() => deleteNote(note)}>
+          <img src="/img/delete.svg" alt="Delete note" />
+        </button>
       </div>
-      <p>{strip(note.body)}</p>
+      <p>{strip(`${note.body.substr(0, 20)}...`)}</p>
     </div>
   );
 };
-
-SidebarItem.propTypes = {};
 
 export default SidebarItem;

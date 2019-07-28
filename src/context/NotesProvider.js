@@ -1,29 +1,47 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { firestore } from "../firebase";
 
-const collectIdAndDoc = doc => ({ ...doc.data(), id: doc.id });
 export const NotesContext = React.createContext();
 
 const NotesProvider = props => {
   const [notes, setNotes] = useState([]);
   const [selectedNoteIndex, setSelectedNoteIndex] = useState(0);
+
+  const collectIdAndDoc = doc => ({ ...doc.data(), id: doc.id });
   useEffect(() => {
-    const unsubscribe = firestore.collection("notes").onSnapshot(snapshot => {
-      const notes = snapshot.docs.map(doc => collectIdAndDoc(doc));
-      setNotes(notes);
-    });
+    let unsubscribe;
+    try {
+      unsubscribe = firestore.collection("notes").onSnapshot(snapshot => {
+        const notes = snapshot.docs.map(doc => collectIdAndDoc(doc));
+        setNotes(notes);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
     return () => unsubscribe();
-  });
+  }, []);
+  const deleteNote = async note => {
+    console.log("here in delete note ", note);
+    try {
+      await firestore
+        .collection("notes")
+        .doc(`${note.id}`)
+        .delete();
+      if (selectedNoteIndex > notes.length - 2) {
+        setSelectedNoteIndex(0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <NotesContext.Provider
-      value={{ notes, selectedNoteIndex, note: notes[selectedNoteIndex] }}
+      value={{ notes, selectedNoteIndex, setSelectedNoteIndex, deleteNote }}
     >
       {props.children}
     </NotesContext.Provider>
   );
 };
-
-NotesProvider.propTypes = {};
 
 export default NotesProvider;
