@@ -12,3 +12,27 @@
 .sidebar h2 {
   text-align: center;
 }
+
+.flex {
+  display: flex;
+}
+
+.flex-h-bet {
+  justify-content: space-between;
+}
+
+.flex-v-center {
+  align-items: center;
+}
+
+input {
+  flex: 1;
+}
+.input-wrapper {
+  margin-bottom: 10px;
+}
+
+.sidebar-heading {
+  align-items: baseline;
+  padding: 5px;
+}

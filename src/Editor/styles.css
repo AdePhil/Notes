@@ -6,3 +6,33 @@
 .editor {
   height: 100%;
 }
+
+.edit-icon {
+  width: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.editor-input {
+  height: 100%;
+  font-weight: bold;
+  font-size: 32px;
+  padding-left: 10px;
+}
+
+.editor-input.disabled {
+  border: none;
+  outline: none;
+}
+
+.editor-input[disabled] {
+  background-color: transparent;
+  opacity: 1;
+  color: #000;
+}
+button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
