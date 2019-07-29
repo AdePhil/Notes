@@ -1,70 +1,83 @@
-import React from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import ReactQuill from "react-quill";
 import { debounce } from "../utils/utils";
 import { NotesContext } from "../context/NotesProvider";
 import "react-quill/dist/quill.snow.css";
 import "./styles.css";
-class Editor extends React.Component {
-  state = {
-    body: this.props.note.body || "",
-    title: this.props.note.title || "",
-    id: this.props.note.id || null,
-    isDisabled: true
-  };
+const Editor = ({ note }) => {
+  const [body, setBody] = useState("");
+  const [title, setTitle] = useState("");
+  const [id, setId] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
 
-  static contextType = NotesContext;
+  const { updateNote } = useContext(NotesContext);
+  const debounceOnChange = React.useCallback(debounce(updateNote, 1500), []);
 
-  componentDidUpdate = oldProps => {
-    if (this.props.note.id !== this.state.id) {
-      const { body, id, title } = this.props.note;
-      this.setState({ body, title, id });
+  // const latestTitle = useRef("");
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (!note) {
+      setId(null);
+      setBody("");
+      setTitle("");
+    }
+    if (note && note.id !== id) {
+      console.log("here in effect");
+      setId(note.id);
+      setBody(note.body);
+      setTitle(note.title);
+    }
+  }, [id, note]);
+
+  useEffect(() => {
+    debounceOnChange({
+      id,
+      body,
+      title
+    });
+  }, [body, debounceOnChange, id, title]);
+
+  const updateBody = async newBody => {
+    if (body !== newBody) {
+      setBody(newBody);
     }
   };
 
-  updateBody = async body => {
-    if (this.state.body !== body) {
-      await this.setState({ body });
-      this.update();
-    }
+  const enableInput = async () => {
+    await setIsDisabled(false);
+    inputRef.current.focus();
   };
 
-  updateTitle = e => {
+  const updateTitle = e => {
     const title = e.target.value;
-    this.setState({ title });
+    setTitle(title);
   };
 
-  handleTitleChange = e => {
+  const handleTitleChange = e => {
     e.preventDefault();
-    const { body, id, title } = this.state;
-    this.context.updateNote({ id, body, title });
-    this.setState({ isDisabled: true });
+    updateNote({ id, body, title });
+    setIsDisabled(true);
   };
 
-  update = debounce(() => {
-    console.log("update function");
-    const { id, body, title } = this.state;
-    // const updatedAt = firestore.FieldValue.serverTimestamp();
-    this.context.updateNote({ id, body, title });
-  }, 1500);
-
-  render() {
-    const { title, isDisabled } = this.state;
-    return (
-      <div className="editor-container">
-        <div className="editor">
+  return (
+    <div className="editor-container">
+      <div className="editor">
+        {id ? (
           <div className="flex">
-            <button onClick={() => this.setState({ isDisabled: false })}>
+            <button onClick={enableInput}>
               <img
                 src="/img/pencil-edit.svg"
                 alt="Edit icon"
                 className="edit-icon"
               />
             </button>
-            <form onSubmit={this.handleTitleChange}>
+            <form onSubmit={handleTitleChange}>
               <input
+                ref={inputRef}
                 type="text"
                 value={title}
-                onChange={this.updateTitle}
+                onChange={updateTitle}
                 className={`${
                   isDisabled ? "disabled editor-input" : "editor-input"
                 }`}
@@ -72,15 +85,15 @@ class Editor extends React.Component {
               />
             </form>
           </div>
-          <ReactQuill
-            style={{ height: "100%" }}
-            value={this.state.body}
-            onChange={this.updateBody}
-          />
-        </div>
+        ) : null}
+        <ReactQuill
+          style={{ height: "100%" }}
+          value={body}
+          onChange={updateBody}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Editor;

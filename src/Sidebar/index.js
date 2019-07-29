@@ -12,6 +12,7 @@ const Sidebar = props => {
     e.preventDefault();
     addNote(title);
     setEditable(false);
+    setTitle("");
   };
   return (
     <div className="sidebar-container">

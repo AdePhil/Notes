@@ -57,6 +57,8 @@ const NotesProvider = props => {
   };
 
   const updateNote = ({ id, body, title }) => {
+    if (!id) return;
+    console.table({ id, body, title });
     firestore
       .collection("notes")
       .doc(`${id}`)

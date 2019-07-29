@@ -11,7 +11,7 @@ function App() {
       <NotesContext.Consumer>
         {({ notes, selectedNoteIndex }) => (
           <Editor
-            note={notes[selectedNoteIndex] ? notes[selectedNoteIndex] : {}}
+            note={notes[selectedNoteIndex] ? notes[selectedNoteIndex] : null}
           />
         )}
       </NotesContext.Consumer>

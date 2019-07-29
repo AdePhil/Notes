@@ -20,7 +20,7 @@ const SidebarItem = ({
           <img src="/img/delete.svg" alt="Delete note" />
         </button>
       </div>
-      <p>{strip(`${note.body.substr(0, 40)}...`)}</p>
+      <p>{strip(`${note.body}`)}</p>
     </div>
   );
 };
