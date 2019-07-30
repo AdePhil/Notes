@@ -6,15 +6,19 @@ export const NotesContext = React.createContext();
 const NotesProvider = props => {
   const [notes, setNotes] = useState([]);
   const [selectedNoteIndex, setSelectedNoteIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const collectIdAndDoc = doc => ({ ...doc.data(), id: doc.id });
   useEffect(() => {
     let unsubscribe;
     try {
+      setIsLoading(true);
       unsubscribe = firestore
         .collection("notes")
         .orderBy("createdAt", "desc")
         .onSnapshot(snapshot => {
+          setIsLoading(false);
           const notes = snapshot.docs.map(doc => collectIdAndDoc(doc));
           setNotes(notes);
         });
@@ -56,18 +60,28 @@ const NotesProvider = props => {
     console.log(index);
   };
 
-  const updateNote = ({ id, body, title }) => {
+  const updateNote = async ({ id, body, title }) => {
+    const currentNote = notes[selectedNoteIndex];
     if (!id) return;
-    console.table({ id, body, title });
-    firestore
-      .collection("notes")
-      .doc(`${id}`)
-      .update({
-        body,
-        title,
-        id,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+    if (!body && !body.trim() && body.trim() === currentNote.body.trim())
+      return;
+    if (!title && !title.trim() && body.trim() === currentNote.body.trim())
+      return;
+    setIsSaving(true);
+    try {
+      await firestore
+        .collection("notes")
+        .doc(`${id}`)
+        .update({
+          body,
+          title,
+          id,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      setIsSaving(false);
+    } catch (error) {
+      setIsSaving(false);
+    }
   };
   return (
     <NotesContext.Provider
@@ -77,7 +91,9 @@ const NotesProvider = props => {
         setSelectedNoteIndex,
         deleteNote,
         addNote,
-        updateNote
+        updateNote,
+        isLoading,
+        isSaving
       }}
     >
       {props.children}

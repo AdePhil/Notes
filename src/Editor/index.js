@@ -10,7 +10,7 @@ const Editor = ({ note }) => {
   const [id, setId] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { updateNote } = useContext(NotesContext);
+  const { updateNote, isSaving } = useContext(NotesContext);
   const debounceOnChange = React.useCallback(debounce(updateNote, 1500), []);
 
   // const latestTitle = useRef("");
@@ -64,7 +64,7 @@ const Editor = ({ note }) => {
     <div className="editor-container">
       <div className="editor">
         {id ? (
-          <div className="flex">
+          <div className="flex flex-v-center">
             <button onClick={enableInput}>
               <img
                 src="/img/pencil-edit.svg"
@@ -84,6 +84,7 @@ const Editor = ({ note }) => {
                 disabled={isDisabled}
               />
             </form>
+            {isSaving ? <span className="bold">Saving...</span> : null}
           </div>
         ) : null}
         <ReactQuill

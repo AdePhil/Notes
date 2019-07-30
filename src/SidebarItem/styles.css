@@ -1,11 +1,10 @@
 .sidebar-item {
-  background-color: #ddd;
   padding: 5px;
   margin-bottom: 10px;
 }
 
 .sidebar-item.active {
-  background-color: #bbb;
+  background-color: #e12e5a;
 }
 .sidebar-item:hover {
   cursor: pointer;

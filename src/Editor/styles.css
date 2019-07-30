@@ -19,7 +19,9 @@
   font-size: 32px;
   padding-left: 10px;
 }
-
+.bold {
+  font-weight: bold;
+}
 .editor-input.disabled {
   border: none;
   outline: none;
